@@ -60,3 +60,7 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
+# ========== Sensitive Information ==========
+application-secret.properties
+application.properties
+
