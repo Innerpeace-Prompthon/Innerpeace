@@ -9,6 +9,7 @@ export const useChatStore = create<ChatStore>()(
       currentChatId: null,
       sidebarOpen: true,
       isLoading: false,
+      showSplitView: false, // 분할 뷰 상태 추가
 
       addChat: (chat: Chat) => {
         set((state) => ({
@@ -51,6 +52,10 @@ export const useChatStore = create<ChatStore>()(
       setLoading: (loading: boolean) => {
         set({ isLoading: loading })
       },
+
+      setSplitView: (show: boolean) => {
+        set({ showSplitView: show })
+      }, // 분할 뷰 설정 함수 추가
     }),
     {
       name: "chat-storage",

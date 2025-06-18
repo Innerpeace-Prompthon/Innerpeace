@@ -8,7 +8,7 @@ import { HomeIcon, ChevronRightIcon, ClockIcon, MapIcon, CalendarIcon } from "..
 
 const MenuContainer = styled.div`
   padding: 16px 12px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #EEEAE4;
 `
 
 const MenuItem = styled.button`
@@ -73,8 +73,8 @@ const SubMenuItem = styled.button`
   }
 `
 
-const ChevronIcon = styled.div<{ expanded: boolean }>`
-  transform: rotate(${(props) => (props.expanded ? "90deg" : "0deg")});
+const ChevronIcon = styled.div<{ $expanded: boolean }>`
+  transform: rotate(${(props) => (props.$expanded ? "90deg" : "0deg")});
   transition: transform 0.2s;
 `
 
@@ -111,7 +111,7 @@ export const SidebarMenu: React.FC = () => {
 
       <SectionHeader onClick={toggleMyPage}>
         <span>내 페이지</span>
-        <ChevronIcon expanded={myPageExpanded}>
+        <ChevronIcon $expanded={myPageExpanded}>
           <ChevronRightIcon size={16} />
         </ChevronIcon>
       </SectionHeader>

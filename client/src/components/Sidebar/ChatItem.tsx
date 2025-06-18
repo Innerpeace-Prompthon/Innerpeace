@@ -6,7 +6,7 @@ import type { Chat } from "../../types/chat"
 import { useChatStore } from "../../store/chatStore"
 import { TrashIcon } from "../Icons"
 
-const ItemContainer = styled.div<{ isActive: boolean }>`
+const ItemContainer = styled.div<{ $isActive: boolean }>`
   padding: 8px 12px;
   margin-bottom: 2px;
   border-radius: 8px;
@@ -14,9 +14,8 @@ const ItemContainer = styled.div<{ isActive: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: ${(props) => (props.isActive ? "#f3f4f6" : "transparent")};
+  background-color: ${(props) => (props.$isActive ? "#f3f4f6" : "transparent")};
   transition: background-color 0.2s;
-  group: hover;
 
   &:hover {
     background-color: #f9fafb;
@@ -68,7 +67,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat }) => {
   }
 
   return (
-    <ItemContainer isActive={isActive} onClick={handleClick}>
+    <ItemContainer $isActive={isActive} onClick={handleClick}>
       <ChatTitle>{chat.title}</ChatTitle>
       <DeleteButton onClick={handleDelete}>
         <TrashIcon size={14} />

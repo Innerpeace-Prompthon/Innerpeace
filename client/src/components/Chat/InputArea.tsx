@@ -33,14 +33,20 @@ const TextArea = styled.textarea`
   resize: none;
   background-color: white;
   color: #111827;
+  letter-spacing: normal;
+  word-spacing: normal;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   
   &::placeholder {
     color: #9ca3af;
+    letter-spacing: normal;
+    word-spacing: normal;
   }
 
   &:focus {
-    border-color: #007aff;
+    border-color: #47533B;
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    outline: none;
   }
 `
 
@@ -53,7 +59,7 @@ const ButtonGroup = styled.div`
   gap: 4px;
 `
 
-const ActionButton = styled.button<{ variant?: "primary" | "secondary" }>`
+const ActionButton = styled.button<{ $variant?: "primary" | "secondary" }>`
   width: 36px;
   height: 36px;
   border-radius: 18px;
@@ -61,11 +67,11 @@ const ActionButton = styled.button<{ variant?: "primary" | "secondary" }>`
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  background-color: ${(props) => (props.variant === "primary" ? "#007aff" : "transparent")};
-  color: ${(props) => (props.variant === "primary" ? "white" : "#6b7280")};
+  background-color: ${(props) => (props.$variant === "primary" ? "#47533B" : "transparent")};
+  color: ${(props) => (props.$variant === "primary" ? "white" : "#6b7280")};
 
   &:hover {
-    background-color: ${(props) => (props.variant === "primary" ? "#0056cc" : "#f3f4f6")};
+    background-color: ${(props) => (props.$variant === "primary" ? "#798E65" : "#f3f4f6")};
   }
 
   &:disabled {
@@ -79,22 +85,36 @@ const ActionButton = styled.button<{ variant?: "primary" | "secondary" }>`
   }
 `
 
+const ErrorMessage = styled.div`
+  position: absolute;
+  bottom: -24px;
+  left: 16px;
+  color: #ef4444;
+  font-size: 12px;
+`
+
 export const InputArea: React.FC = () => {
   const [input, setInput] = useState("")
+  const [error, setError] = useState("")
   const { currentChatId, chats, updateChat, addChat, isLoading, setLoading } = useChatStore()
 
   const handleSubmit = async () => {
     if (!input.trim() || isLoading) return
-
+  
+    console.log('=== 메시지 전송 시작 ===')
+    console.log('입력 메시지:', input.trim())
+  
     const userMessage: Message = {
       id: Date.now().toString(),
       content: input.trim(),
       role: "user",
       timestamp: new Date(),
     }
-
+  
     let chatId = currentChatId
-
+    let currentMessages: Message[] = []
+  
+    // 새 채팅 생성 또는 기존 채팅에 사용자 메시지 추가
     if (!chatId) {
       const newChat = {
         id: Date.now().toString(),
@@ -103,39 +123,105 @@ export const InputArea: React.FC = () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       }
+      console.log('새 채팅 생성:', newChat.id)
       addChat(newChat)
       chatId = newChat.id
+      currentMessages = [userMessage]
     } else {
       const currentChat = chats.find((chat) => chat.id === chatId)
       if (currentChat) {
+        currentMessages = [...currentChat.messages, userMessage]
         updateChat(chatId, {
-          messages: [...currentChat.messages, userMessage],
+          messages: currentMessages,
           updatedAt: new Date(),
         })
       }
     }
-
+  
     setInput("")
+    setError("")
     setLoading(true)
 
-    setTimeout(() => {
+    try {
+      console.log('=== API 요청 시작 ===')
+      console.log('요청 URL: http://localhost:8080/api/chat/message')
+      console.log('요청 데이터:', { message: userMessage.content })
+      
+      const response = await fetch('http://localhost:8080/api/chat/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userMessage.content }),
+      })
+
+      console.log('=== 응답 받음 ===')
+      console.log('응답 상태:', response.status)
+      console.log('응답 OK:', response.ok)
+      console.log('응답 헤더:', Object.fromEntries(response.headers.entries()))
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`)
+      }
+
+      const responseText = await response.text()
+      console.log('=== 응답 텍스트 ===')
+      console.log('원본 텍스트:', responseText)
+
+      let data
+      try {
+        data = JSON.parse(responseText)
+        console.log('=== 파싱된 JSON ===')
+        console.log('파싱된 데이터:', data)
+      } catch (parseError) {
+        console.error('JSON 파싱 실패:', parseError)
+        throw new Error('서버 응답을 파싱할 수 없습니다.')
+      }
+
+      // AI 응답 메시지 생성
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: `안녕하세요! "${userMessage.content}"에 대한 답변입니다. 이것은 시뮬레이션된 AI 응답입니다.`,
+        content: data.message || "응답을 받지 못했습니다.",
         role: "assistant",
         timestamp: new Date(),
       }
 
-      const currentChat = chats.find((chat) => chat.id === chatId)
-      if (currentChat) {
-        updateChat(chatId!, {
-          messages: [...currentChat.messages, userMessage, aiMessage],
-          updatedAt: new Date(),
-        })
-      }
+      console.log('=== AI 메시지 생성 ===')
+      console.log('AI 응답:', aiMessage.content)
 
+      // 메시지 업데이트
+      const finalMessages = [...currentMessages, aiMessage]
+      updateChat(chatId!, {
+        messages: finalMessages,
+        updatedAt: new Date(),
+      })
+
+      console.log('=== 메시지 업데이트 완료 ===')
+
+    } catch (error) {
+      console.error('=== API 호출 실패 ===')
+      console.error('에러 객체:', error)
+      console.error('에러 메시지:', error instanceof Error ? error.message : String(error))
+      
+      setError(`API 호출 실패: ${error instanceof Error ? error.message : String(error)}`)
+      
+      // 에러 메시지 표시
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: `죄송합니다. 오류가 발생했습니다: ${error instanceof Error ? error.message : String(error)}`,
+        role: "assistant",
+        timestamp: new Date(),
+      }
+      
+      const finalMessages = [...currentMessages, errorMessage]
+      updateChat(chatId!, {
+        messages: finalMessages,
+        updatedAt: new Date(),
+      })
+    } finally {
       setLoading(false)
-    }, 1000)
+      console.log('=== 처리 완료 ===')
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -156,13 +242,18 @@ export const InputArea: React.FC = () => {
           disabled={isLoading}
         />
         <ButtonGroup>
-          <ActionButton variant="secondary">
+          <ActionButton $variant="secondary">
             <MicIcon size={18} />
           </ActionButton>
-          <ActionButton variant="primary" onClick={handleSubmit} disabled={!input.trim() || isLoading}>
+          <ActionButton 
+            $variant="primary" 
+            onClick={handleSubmit} 
+            disabled={!input.trim() || isLoading}
+          >
             <SendIcon size={18} />
           </ActionButton>
         </ButtonGroup>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
       </InputWrapper>
     </InputContainer>
   )
