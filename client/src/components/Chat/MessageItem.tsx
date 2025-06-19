@@ -1,6 +1,7 @@
 import type React from "react"
 import styled from "styled-components"
 import type { Message } from "../../types/chat"
+import { useChatStore } from "../../store/chatStore"
 
 const MessageContainer = styled.div<{ $isUser: boolean }>`
   display: flex;
@@ -9,8 +10,8 @@ const MessageContainer = styled.div<{ $isUser: boolean }>`
   width: 100%;
 `
 
-const MessageBubble = styled.div<{ $isUser: boolean }>`
-  max-width: 70%;
+const MessageBubble = styled.div<{ $isUser: boolean; $hasSplitView?: boolean }>`
+  max-width: ${(props) => (props.$hasSplitView ? "85%" : "70%")};
   padding: 12px 17px;
   border-radius: 18px;
   background-color: ${(props) => (props.$isUser ? "#47533B" : "#EEEAE4")};
@@ -23,10 +24,6 @@ const MessageBubble = styled.div<{ $isUser: boolean }>`
   white-space: pre-wrap !important;
   word-break: break-word;
   overflow-wrap: break-word;
-  
-  /* AI 응답의 경우 추가 스타일링 */
-  ${(props) => !props.$isUser && `
-  `}
 `
 
 const Avatar = styled.div<{ $isUser: boolean }>`
@@ -46,13 +43,13 @@ const Avatar = styled.div<{ $isUser: boolean }>`
   margin-top: 4px;
 `
 
-const MessageContent = styled.div<{ $isUser: boolean }>`
+const MessageContent = styled.div<{ $isUser: boolean; $hasSplitView?: boolean }>`
   display: flex;
   align-items: flex-start;
   flex-direction: ${(props) => (props.$isUser ? "row-reverse" : "row")};
   width: 100%;
-  max-width: 768px;
-  padding: 0 20px;
+  max-width: ${(props) => (props.$hasSplitView ? "500px" : "768px")};
+  padding: 0 ${(props) => (props.$hasSplitView ? "15px" : "20px")};
 `
 
 interface MessageItemProps {
@@ -61,12 +58,13 @@ interface MessageItemProps {
 
 export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const isUser = message.role === "user"
+  const { showSplitView } = useChatStore()
 
   return (
     <MessageContainer $isUser={isUser}>
-      <MessageContent $isUser={isUser}>
+      <MessageContent $isUser={isUser} $hasSplitView={showSplitView}>
         <Avatar $isUser={isUser}>{isUser ? "U" : "AI"}</Avatar>
-        <MessageBubble $isUser={isUser}>
+        <MessageBubble $isUser={isUser} $hasSplitView={showSplitView}>
           {message.content}
         </MessageBubble>
       </MessageContent>

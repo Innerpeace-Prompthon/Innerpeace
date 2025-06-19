@@ -9,7 +9,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    background-color: white;
+    background-color: #FAF9F6;
     color: #202123;
     overflow: hidden;
   }

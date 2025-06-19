@@ -2,13 +2,27 @@ import type React from "react"
 import styled from "styled-components"
 
 const SplitContainer = styled.div`
-  width: 400px;
-  height: 100%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100vh;
   background-color: #fafafa;
   border-left: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  z-index: 999;
+  animation: slideIn 0.3s ease-out;
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
 `
 
 const SplitHeader = styled.div`
@@ -29,18 +43,16 @@ const SplitContent = styled.div`
   justify-content: center;
   color: #9ca3af;
   font-size: 14px;
+  text-align: center;
 `
 
-interface SplitViewProps {
-  title?: string
-  children?: React.ReactNode
-}
-
-export const SplitView: React.FC<SplitViewProps> = ({ title = "추가 정보", children }) => {
+export const SplitView: React.FC = () => {
   return (
     <SplitContainer>
-      <SplitHeader>{title}</SplitHeader>
-      <SplitContent>{children || "여기에 추가 콘텐츠가 표시됩니다"}</SplitContent>
+      <SplitHeader>추가 정보</SplitHeader>
+      <SplitContent>
+        여기에 추가 콘텐츠가 표시됩니다
+      </SplitContent>
     </SplitContainer>
   )
 }
