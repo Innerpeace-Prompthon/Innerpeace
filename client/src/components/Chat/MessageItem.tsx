@@ -1,6 +1,7 @@
 import type React from "react";
 import styled from "styled-components";
 import type { Message } from "../../types/chat";
+import { useChatStore } from "../../store/chatStore";
 
 const MessageContainer = styled.div<{ $isUser: boolean }>`
   display: flex;
@@ -9,9 +10,9 @@ const MessageContainer = styled.div<{ $isUser: boolean }>`
   width: 100%;
 `;
 
-const MessageBubble = styled.div<{ $isUser: boolean }>`
-  max-width: 70%;
-  padding: 8px 15px;
+const MessageBubble = styled.div<{ $isUser: boolean; $hasSplitView?: boolean }>`
+  max-width: ${(props) => (props.$hasSplitView ? "85%" : "70%")};
+  padding: 8px 20px;
   border-radius: 30px;
   background-color: ${(props) => (props.$isUser ? "#a3bd6c" : "#f2f2f2")};
   color: ${(props) => (props.$isUser ? "white" : "#111827")};
@@ -46,14 +47,17 @@ const Avatar = styled.div<{ $isUser: boolean }>`
   align-self: flex-start;
 `;
 
-const MessageContent = styled.div<{ $isUser: boolean }>`
+const MessageContent = styled.div<{
+  $isUser: boolean;
+  $hasSplitView?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   flex-direction: ${(props) => (props.$isUser ? "row-reverse" : "column")};
   width: 100%;
-  max-width: 768px;
-  padding: 0 20px;
+  max-width: ${(props) => (props.$hasSplitView ? "500px" : "768px")};
+  padding: 0 ${(props) => (props.$hasSplitView ? "15px" : "20px")};
 `;
 
 interface MessageItemProps {
@@ -62,13 +66,15 @@ interface MessageItemProps {
 
 export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const isUser = message.role === "user";
+  const { showSplitView } = useChatStore();
 
   return (
     <MessageContainer $isUser={isUser}>
-      <MessageContent $isUser={isUser}>
+      <MessageContent $isUser={isUser} $hasSplitView={showSplitView}>
         {!isUser && <Avatar $isUser={isUser}>이너피스</Avatar>}
-
-        <MessageBubble $isUser={isUser}>{message.content}</MessageBubble>
+        <MessageBubble $isUser={isUser} $hasSplitView={showSplitView}>
+          <p>{message.content}</p>
+        </MessageBubble>
       </MessageContent>
     </MessageContainer>
   );

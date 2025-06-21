@@ -27,5 +27,5 @@ export interface ChatStore {
   toggleSidebar: () => void
   setSidebarOpen: (open: boolean) => void
   setLoading: (loading: boolean) => void
-  setSplitView: (show: boolean) => void
+  toggleSplitView: () => void
 }
