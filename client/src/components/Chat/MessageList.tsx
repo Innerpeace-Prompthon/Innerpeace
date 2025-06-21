@@ -8,11 +8,12 @@ import { MessageItem } from "./MessageItem"
 
 const ListContainer = styled.div`
   flex: 1;
-  overflow-y: auto;
   padding: 20px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  min-height: 0;
 `
 
 interface MessageListProps {
