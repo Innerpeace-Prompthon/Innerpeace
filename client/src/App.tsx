@@ -15,6 +15,7 @@ import {
 
 const queryClient = new QueryClient();
 
+// 분리하는게 좋음.
 function ChatApp() {
   const { currentChatId, chats, showSplitView } = useChatStore();
   const currentChat = chats.find((chat) => chat.id === currentChatId);
