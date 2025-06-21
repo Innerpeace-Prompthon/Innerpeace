@@ -33,11 +33,11 @@ const ToggleButton = styled.button`
 `
 
 export const SplitViewToggle: React.FC = () => {
-  const { splitViewOpen, toggleSplitView } = useChatStore()
+  const { showSplitView, toggleSplitView } = useChatStore()
 
   return (
-    <ToggleButton onClick={toggleSplitView} title={splitViewOpen ? "스플릿 뷰 닫기" : "스플릿 뷰 열기"}>
-      {splitViewOpen ? <CollapseIcon size={18} /> : <SplitViewIcon size={18} />}
+    <ToggleButton onClick={toggleSplitView} title={showSplitView ? "스플릿 뷰 닫기" : "스플릿 뷰 열기"}>
+      {showSplitView ? <CollapseIcon size={18} /> : <SplitViewIcon size={18} />}
     </ToggleButton>
   )
 }
