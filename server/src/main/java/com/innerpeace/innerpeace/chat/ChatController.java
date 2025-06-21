@@ -1,8 +1,5 @@
 package com.innerpeace.innerpeace.chat;
 
-import com.innerpeace.innerpeace.chat.ChatRequestDto;
-import com.innerpeace.innerpeace.chat.ChatResponseDto;
-import com.innerpeace.innerpeace.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

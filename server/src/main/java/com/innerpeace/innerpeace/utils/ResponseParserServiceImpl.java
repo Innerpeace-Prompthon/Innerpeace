@@ -1,7 +1,5 @@
 package com.innerpeace.innerpeace.utils;
 
-import com.innerpeace.innerpeace.utils.ParseRequestDto;
-import com.innerpeace.innerpeace.utils.ParseResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
