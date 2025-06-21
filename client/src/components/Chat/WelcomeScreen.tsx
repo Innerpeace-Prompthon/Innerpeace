@@ -2,11 +2,21 @@ import React, { useState } from "react";
 import { InputArea } from "./InputArea";
 import * as S from "../../styles/WelcomeScreen.style";
 
+export interface UserFormType {
+  startDate: string;
+  endDate: string;
+  region: string;
+  travelType: string;
+  transportation: string;
+}
+
 export const WelcomeScreen: React.FC = () => {
-  const [formData, setFormData] = useState({
-    date: "",
-    location: "",
-    purpose: "관광",
+  const [formData, setFormData] = useState<UserFormType>({
+    startDate: "",
+    endDate: "",
+    region: "",
+    travelType: "관광",
+    transportation: "",
   });
 
   const handleChange = (
@@ -24,33 +34,42 @@ export const WelcomeScreen: React.FC = () => {
       </S.WelcomeTitle>
 
       <S.Form>
-        <div>
+        <S.InputBox>
           <S.Label>여행 기간</S.Label>
-          <S.Input
-            name="date"
-            type="date"
-            value={formData.date}
-            onChange={handleChange}
-            placeholder="예) 2일, 일주일, 1개월"
-          />
-        </div>
 
-        <div>
+          <S.DateBox>
+            <input
+              name="startDate"
+              type="date"
+              value={formData.startDate}
+              onChange={handleChange}
+            />
+
+            <input
+              name="endDate"
+              type="date"
+              value={formData.endDate}
+              onChange={handleChange}
+            />
+          </S.DateBox>
+        </S.InputBox>
+
+        <S.InputBox>
           <S.Label>여행 장소</S.Label>
           <S.Input
             type="text"
-            name="location"
-            value={formData.location}
+            name="region"
+            value={formData.region}
             onChange={handleChange}
             placeholder="예) 서울, 대구, 부산"
           />
-        </div>
+        </S.InputBox>
 
-        <div>
+        <S.InputBox>
           <S.Label>여행 목적</S.Label>
           <S.Select
-            name="purpose"
-            value={formData.purpose}
+            name="travelType"
+            value={formData.travelType}
             onChange={handleChange}
           >
             <option value="관광">관광</option>
@@ -59,7 +78,19 @@ export const WelcomeScreen: React.FC = () => {
             <option value="액티비티">액티비티</option>
             <option value="문화">문화 체험</option>
           </S.Select>
-        </div>
+        </S.InputBox>
+
+        <S.InputBox>
+          <S.Label>이동 수단</S.Label>
+          <S.Select
+            name="transportation"
+            value={formData.transportation}
+            onChange={handleChange}
+          >
+            <option value="대중교통">대중교통 이용</option>
+            <option value="자가용">자가용 이용</option>
+          </S.Select>
+        </S.InputBox>
       </S.Form>
 
       <div style={{ width: "500px" }}>
