@@ -45,11 +45,19 @@ const SplitContent = styled.div`
   text-align: center;
 `;
 
-export const SplitView: React.FC = () => {
+interface SplitViewPropsType {
+  title: string;
+  children: React.ReactNode;
+}
+
+export const SplitView: React.FC<SplitViewPropsType> = ({
+  children,
+  title,
+}) => {
   return (
     <SplitContainer>
-      <SplitHeader>추가 정보</SplitHeader>
-      <SplitContent>여기에 추가 콘텐츠가 표시됩니다</SplitContent>
+      <SplitHeader>{title}</SplitHeader>
+      <SplitContent>{children}</SplitContent>
     </SplitContainer>
   );
 };
