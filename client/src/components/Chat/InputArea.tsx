@@ -44,9 +44,10 @@ const InputWrapper = styled.div`
   border: 1px solid #d1d5db;
   overflow: hidden;
   padding: 8px;
+  background-color: white;
 
   &:focus-within {
-    border-color: #47533b;
+    border-color: #b7d37a;
     outline: none;
   }
 `;
@@ -60,7 +61,7 @@ const ActionButton = styled.button<{ $variant?: "primary" | "secondary" }>`
   justify-content: center;
   transition: all 0.2s;
   background-color: ${(props) =>
-    props.$variant === "primary" ? "#47533B" : "transparent"};
+    props.$variant === "primary" ? "#b7d37a" : "transparent"};
   color: ${(props) => (props.$variant === "primary" ? "white" : "#6b7280")};
 
   &:hover {
