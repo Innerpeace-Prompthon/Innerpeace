@@ -18,7 +18,7 @@ export const WelcomeTitle = styled.h2`
 
   p {
     font-size: 20px;
-    color: #c6c6c6;
+    color: rgb(127, 127, 127);
     font-weight: 400;
   }
 
@@ -42,14 +42,14 @@ export const Form = styled.form`
 `;
 
 export const Label = styled.label`
-  font-weight: 500;
-  color: #333;
+  color: rgba(0, 0, 0, 0.7);
   text-align: left;
   margin-right: 7px;
   font-weight: bold;
 `;
 
 export const Input = styled.input`
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -57,8 +57,32 @@ export const Input = styled.input`
 `;
 
 export const Select = styled.select`
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px;
+`;
+
+export const DateBox = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 8px;
+
+  input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+`;
+
+export const InputBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  gap: 5px;
 `;
