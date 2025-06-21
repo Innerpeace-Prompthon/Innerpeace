@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from "styled-components"
+import styled, { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -9,7 +9,6 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    background-color: white;
     color: #202123;
     overflow: hidden;
   }
@@ -25,17 +24,17 @@ export const GlobalStyle = createGlobalStyle`
     outline: none;
     border: none;
   }
-`
+`;
 
 export const AppContainer = styled.div`
   display: flex;
   height: 100vh;
   width: 100vw;
-`
+`;
 
 export const MainContent = styled.main`
   flex: 1;
   display: flex;
   flex-direction: column;
   margin-left: 260px;
-`
+`;
