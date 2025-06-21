@@ -8,7 +8,6 @@ const ChatContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 `
 
 export const ChatArea: React.FC = () => {
