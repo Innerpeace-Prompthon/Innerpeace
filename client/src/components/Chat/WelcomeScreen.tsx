@@ -1,44 +1,101 @@
-import type React from "react"
-import styled from "styled-components"
-import { InputArea } from "./InputArea"
+import React, { useState } from "react";
+import { InputArea } from "./InputArea";
+import * as S from "../../styles/WelcomeScreen.style";
 
-const WelcomeContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  text-align: center;
-  background-color: white;
-  gap: 24px;
-  transform: translateY(-50px);
-`
-
-const WelcomeTitle = styled.h2`
-  font-size: 32px;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 0;
-`
-
-// const WelcomeSubtitle = styled.p`
-//   font-size: 16px;
-//   color: #6b7280;
-//   max-width: 600px;
-//   line-height: 1.5;
-// `
+export interface UserFormType {
+  startDate: string;
+  endDate: string;
+  region: string;
+  travelType: string;
+  transportation: string;
+}
 
 export const WelcomeScreen: React.FC = () => {
+  const [formData, setFormData] = useState<UserFormType>({
+    startDate: "",
+    endDate: "",
+    region: "",
+    travelType: "관광",
+    transportation: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <WelcomeContainer>
-      <div>
-        <WelcomeTitle>무슨 작업을 하고 계세요?</WelcomeTitle>
-        {/* <WelcomeSubtitle>
-          AI 어시스턴트와 대화를 시작해보세요. 질문하거나 도움이 필요한 작업에 대해 말씀해 주세요.
-        </WelcomeSubtitle> */}
+    <S.WelcomeContainer>
+      <S.WelcomeTitle>
+        <p>쉼이 필요한 당신을 위한, 감성 힐링 여행</p>
+        <h1>이너피스</h1>
+      </S.WelcomeTitle>
+
+      <S.Form>
+        <S.InputBox>
+          <S.Label>여행 기간</S.Label>
+
+          <S.DateBox>
+            <input
+              name="startDate"
+              type="date"
+              value={formData.startDate}
+              onChange={handleChange}
+            />
+
+            <input
+              name="endDate"
+              type="date"
+              value={formData.endDate}
+              onChange={handleChange}
+            />
+          </S.DateBox>
+        </S.InputBox>
+
+        <S.InputBox>
+          <S.Label>여행 장소</S.Label>
+          <S.Input
+            type="text"
+            name="region"
+            value={formData.region}
+            onChange={handleChange}
+            placeholder="예) 서울, 대구, 부산"
+          />
+        </S.InputBox>
+
+        <S.InputBox>
+          <S.Label>여행 목적</S.Label>
+          <S.Select
+            name="travelType"
+            value={formData.travelType}
+            onChange={handleChange}
+          >
+            <option value="관광">관광</option>
+            <option value="힐링">힐링</option>
+            <option value="음식">음식 탐방</option>
+            <option value="액티비티">액티비티</option>
+            <option value="문화">문화 체험</option>
+          </S.Select>
+        </S.InputBox>
+
+        <S.InputBox>
+          <S.Label>이동 수단</S.Label>
+          <S.Select
+            name="transportation"
+            value={formData.transportation}
+            onChange={handleChange}
+          >
+            <option value="대중교통">대중교통 이용</option>
+            <option value="자가용">자가용 이용</option>
+          </S.Select>
+        </S.InputBox>
+      </S.Form>
+
+      <div style={{ width: "500px" }}>
+        <InputArea />
       </div>
-      <InputArea />
-    </WelcomeContainer>
-  )
-}
+    </S.WelcomeContainer>
+  );
+};
