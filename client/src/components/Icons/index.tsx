@@ -98,20 +98,16 @@ export const CalendarIcon: React.FC<IconProps> = ({ size = 24, color = "currentC
   </svg>
 )
 
+// 스플릿 뷰용 아이콘 추가
 export const SplitViewIcon: React.FC<IconProps> = ({ size = 24, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <path
-      d="M3 3h7v18H3V3zm11 0h7v18h-7V3z"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <rect x="3" y="3" width="8" height="18" rx="2" stroke={color} strokeWidth="2" />
+    <rect x="13" y="3" width="8" height="18" rx="2" stroke={color} strokeWidth="2" />
   </svg>
 )
 
 export const CollapseIcon: React.FC<IconProps> = ({ size = 24, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <path d="M15 18l-6-6 6-6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M18 6L6 18M6 6l12 12" stroke={color} strokeWidth="2" strokeLinecap="round" />
   </svg>
 )
