@@ -12,6 +12,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Create application.properties
+      run: |
+        echo "laas.api.key=${{ secrets.LAAS_API_KEY }}" >> server/src/main/resources/application.properties
+        echo "laas.project.id=${{ secrets.LAAS_PROJECT_ID }}" >> server/src/main/resources/application.properties
+
     - name: Build with Gradle
       run: |
         cd server
