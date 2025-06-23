@@ -2,6 +2,8 @@ import type React from "react";
 import styled from "styled-components";
 import type { Message } from "../../types/chat";
 import { useChatStore } from "../../store/chatStore";
+import { useTravelScheduleStore } from "../../store/travelScheduleStore";
+import { fetchTravelPlan } from "../../api/travel";
 
 const MessageContainer = styled.div<{ $isUser: boolean }>`
   display: flex;
@@ -35,7 +37,6 @@ const MessageBubble = styled.div<{ $isUser: boolean; $hasSplitView?: boolean }>`
 const Avatar = styled.div<{ $isUser: boolean }>`
   padding: 8px 12px;
   border-radius: 20px;
-  /* background-color: ${(props) => (props.$isUser ? "#47533B" : "#10a37f")}; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,7 +67,26 @@ interface MessageItemProps {
 
 export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const isUser = message.role === "user";
-  const { showSplitView } = useChatStore();
+  const { showSplitView, toggleSplitView } = useChatStore();
+
+  const { addTravelSchedule, deleteTravelSchedule } = useTravelScheduleStore();
+
+  const onClickCreateTravelSchedule = async () => {
+    try {
+      const data = await fetchTravelPlan({
+        userInput: "",
+        date: "",
+        region: "",
+        travelType: "",
+        transportation: "",
+      });
+      deleteTravelSchedule();
+      addTravelSchedule(data);
+      toggleSplitView();
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <MessageContainer $isUser={isUser}>
@@ -75,6 +95,22 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
         <MessageBubble $isUser={isUser} $hasSplitView={showSplitView}>
           <p>{message.content}</p>
         </MessageBubble>
+
+        {!isUser && (
+          <button
+            style={{
+              margin: "10px",
+              color: "white",
+              padding: "6px 10px",
+              borderRadius: "9999px",
+              fontSize: "12px",
+              backgroundColor: "#a3bd6c",
+            }}
+            onClick={onClickCreateTravelSchedule}
+          >
+            일정생성
+          </button>
+        )}
       </MessageContent>
     </MessageContainer>
   );
