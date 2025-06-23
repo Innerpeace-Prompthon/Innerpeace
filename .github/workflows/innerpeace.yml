@@ -23,8 +23,8 @@ jobs:
       with:
         push: true
         tags: sangwonee/innerpeace:latest
-        file: Innerpeace/server/Dockerfile
-        context: Innerpeace/server
+        file: server/Dockerfile
+        context: server
 
     - name: Deploy to EC2 via SSH
       uses: appleboy/ssh-action@v0.1.7
