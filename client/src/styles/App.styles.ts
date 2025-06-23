@@ -21,7 +21,7 @@ export const SidebarWrapper = styled.div<{ $isHidden?: boolean }>`
 export const ChatContainer = styled.div<{ $hasSplitView?: boolean }>`
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: ${(props) => (props.$hasSplitView ? "none" : "1")};
   margin-left: ${(props) => (props.$hasSplitView ? "0" : "260px")};
   width: ${(props) => (props.$hasSplitView ? "50%" : "auto")};
   transition: all 0.3s ease;
