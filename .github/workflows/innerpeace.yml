@@ -15,6 +15,7 @@ jobs:
     - name: Build with Gradle
       run: |
         cd server
+        chmod +x ./gradlew
         ./gradlew clean build
 
     - name: Log in to Docker Hub
