@@ -3,7 +3,7 @@ package com.innerpeace.innerpeace.calllassapi.dto;
 import lombok.Getter;
 
 @Getter
-public class CallLassApiRequestDto {
+public class CallLaasApiRequestDto {
     private String region;           // 여행 지역
     private String travelType;       // 선호 여행 타입
     private String date;             // 여행 날짜

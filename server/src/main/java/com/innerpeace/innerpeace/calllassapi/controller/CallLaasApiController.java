@@ -1,9 +1,9 @@
 package com.innerpeace.innerpeace.calllassapi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.innerpeace.innerpeace.calllassapi.dto.CallLassApiRequestDto;
+import com.innerpeace.innerpeace.calllassapi.dto.CallLaasApiRequestDto;
 import com.innerpeace.innerpeace.calllassapi.dto.ResponseDto;
-import com.innerpeace.innerpeace.calllassapi.service.CallLassApiService;
+import com.innerpeace.innerpeace.calllassapi.service.CallLaasApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/laas")
-public class CallLassApiController  {
+public class CallLaasApiController {
 
-    private final CallLassApiService callLassApiService;
+    private final CallLaasApiService callLaasApiService;
 
     @PostMapping("/chat")
-    public ResponseEntity<ResponseDto> callLassApi(@RequestBody CallLassApiRequestDto requestDto) throws JsonProcessingException {
+    public ResponseEntity<ResponseDto> callLassApi(@RequestBody CallLaasApiRequestDto requestDto) throws JsonProcessingException {
 
-        return ResponseEntity.ok(callLassApiService.requestChatCompletion(requestDto));
+        return ResponseEntity.ok(callLaasApiService.requestChatCompletion(requestDto));
     }
 }
