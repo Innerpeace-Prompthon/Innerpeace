@@ -1,7 +1,10 @@
 package com.innerpeace.innerpeace.calllassapi.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innerpeace.innerpeace.calllassapi.dto.CallLassApiRequestDto;
-import com.innerpeace.innerpeace.calllassapi.dto.CallLassApiResponseDto;
+import com.innerpeace.innerpeace.calllassapi.dto.ResponseDto;
+import com.innerpeace.innerpeace.util.ResponseParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +24,8 @@ public class CallLassApiService {
     @Value("${laas.project.id}")
     private String projectId;
 
-    public CallLassApiResponseDto requestChatCompletion(CallLassApiRequestDto requestDto) {
+
+    public ResponseDto requestChatCompletion(CallLassApiRequestDto requestDto) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -48,6 +52,7 @@ public class CallLassApiService {
                 String.class
         );
 
-        return new CallLassApiResponseDto(response.getBody());
+        return ResponseParser.parseResponseEntity(response);
+
     }
 }
