@@ -10,14 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseParser {
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final String DAY = "Day";
+    private static final String ORDER = "순서:";
+    private static final String PLACE = "장소:";
+    private static final String ACTIVITY = "활동:";
+    private static final String DESCRIPTION = "설명:";
+    private static final String IMAGE = "이미지:";
+    private static final String LATITUDE = "위도:";
+    private static final String LONGITUDE = "경도:";
+    private static final String INNERPEACE = "innerpeace:";
+
 
     private ResponseParser() {
         throw new UnsupportedOperationException("Utility class");
     }
-    /*
-    추출한 응답을 자바객체로 파싱하는 로직
-     */
+
     public static ResponseDto parseTextToResponseDto(String text) {
         List<ResponseDto.TravelDay> travelDays = new ArrayList<>();
         ResponseDto.TravelDay currentDay = null;
@@ -28,7 +38,7 @@ public class ResponseParser {
         for (String line : lines) {
             line = line.trim();
 
-            if (line.startsWith("Day")) {
+            if (line.startsWith(DAY)) {
                 if (currentDay != null) {
                     currentDay.setPlan(currentPlans);
                     travelDays.add(currentDay);
@@ -36,17 +46,18 @@ public class ResponseParser {
                 }
                 currentDay = parseTravelDay(line);
 
-            } else if (line.startsWith("순서:")) {
+            } else if (line.startsWith(ORDER)) {
                 currentPlan = new ResponseDto.Plan();
-                currentPlan.setOrder(parseIntValue(line, "순서:"));
+                currentPlan.setOrder(parseIntValue(line, ORDER));
 
             } else if (currentPlan != null) {
                 parsePlanProperty(currentPlan, line);
-                if (line.startsWith("경도:")) {
+                if (line.startsWith(LONGITUDE)) {
                     currentPlans.add(currentPlan);
                 }
             }
         }
+
 
         if (currentDay != null) {
             currentDay.setPlan(currentPlans);
@@ -54,7 +65,7 @@ public class ResponseParser {
         }
 
         ResponseDto responseDto = new ResponseDto();
-        responseDto.setText(text);
+        responseDto.setText(extractInnerpeaceText(text));
         responseDto.setTravelSchedule(travelDays);
         return responseDto;
     }
@@ -75,6 +86,7 @@ public class ResponseParser {
         }
     }
 
+
     private static double parseDoubleValue(String line, String prefix) {
         try {
             return Double.parseDouble(line.replace(prefix, "").trim());
@@ -84,26 +96,28 @@ public class ResponseParser {
     }
 
     private static void parsePlanProperty(ResponseDto.Plan plan, String line) {
-        if (line.startsWith("장소:")) {
-            plan.setPlace(line.replace("장소:", "").trim());
-        } else if (line.startsWith("활동:")) {
-            plan.setActivity(line.replace("활동:", "").trim());
-        } else if (line.startsWith("설명:")) {
-            plan.setDescription(line.replace("설명:", "").trim());
-        } else if (line.startsWith("이미지:")) {
-            plan.setImage(line.replace("이미지:", "").trim());
-        } else if (line.startsWith("위도:")) {
-            plan.setLatitude(parseDoubleValue(line, "위도:"));
-        } else if (line.startsWith("경도:")) {
-            plan.setLongitude(parseDoubleValue(line, "경도:"));
+        if (line.startsWith(PLACE)) {
+            plan.setPlace(line.replace(PLACE, "").trim());
+        } else if (line.startsWith(ACTIVITY)) {
+            plan.setActivity(line.replace(ACTIVITY, "").trim());
+        } else if (line.startsWith(DESCRIPTION)) {
+            plan.setDescription(line.replace(DESCRIPTION, "").trim());
+        } else if (line.startsWith(IMAGE)) {
+            plan.setImage(line.replace(IMAGE, "").trim());
+        } else if (line.startsWith(LATITUDE)) {
+            plan.setLatitude(parseDoubleValue(line, LATITUDE));
+        } else if (line.startsWith(LONGITUDE)) {
+            plan.setLongitude(parseDoubleValue(line, LONGITUDE));
         }
     }
 
 
+    private static String extractInnerpeaceText(String fullText) {
+        int idx = fullText.indexOf(INNERPEACE);
+        if (idx == -1) return "";
+        return fullText.substring(idx + INNERPEACE.length()).trim();
+    }
 
-    /*
-    사용자에게 보여줄 응답 추출 로직
-     */
     public static ResponseDto parseResponseEntity(ResponseEntity<String> response) throws JsonProcessingException {
         JsonNode root = objectMapper.readTree(response.getBody());
         String contentJsonString = root
