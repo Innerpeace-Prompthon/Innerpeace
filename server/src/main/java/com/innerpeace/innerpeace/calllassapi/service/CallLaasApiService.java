@@ -1,8 +1,7 @@
 package com.innerpeace.innerpeace.calllassapi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.innerpeace.innerpeace.calllassapi.dto.CallLassApiRequestDto;
+import com.innerpeace.innerpeace.calllassapi.dto.CallLaasApiRequestDto;
 import com.innerpeace.innerpeace.calllassapi.dto.ResponseDto;
 import com.innerpeace.innerpeace.util.ResponseParser;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 @Service
-public class CallLassApiService {
+public class CallLaasApiService {
 
     @Value("${laas.api.key}")
     private String apiKey;
@@ -25,7 +24,7 @@ public class CallLassApiService {
     private String projectId;
 
 
-    public ResponseDto requestChatCompletion(CallLassApiRequestDto requestDto) throws JsonProcessingException {
+    public ResponseDto requestChatCompletion(CallLaasApiRequestDto requestDto) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
