@@ -1,11 +1,11 @@
-"use client";
-
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useChatStore } from "../../store/chatStore";
 import { SendIcon } from "../Icons";
 import type { Message } from "../../types/chat";
+import { useUserPlanInfoStore } from "../../store/userPlanInfoStore";
+import { getAIResponse } from "../../api/travel";
 
 const InputContainer = styled.div`
   padding: 20px;
@@ -15,23 +15,20 @@ const InputContainer = styled.div`
   width: 100%;
 `;
 
-const TextArea = styled.input`
-  padding: 0 20px;
+const TextArea = styled.textarea`
+  padding: 8px 20px;
   width: 100%;
-  max-height: 200px;
   font-size: 16px;
   resize: none;
   background-color: white;
   color: #111827;
   letter-spacing: normal;
   word-spacing: normal;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    sans-serif;
+  max-height: 200px;
+  overflow-y: auto;
 
   &::placeholder {
     color: #9ca3af;
-    letter-spacing: normal;
-    word-spacing: normal;
   }
 `;
 
@@ -40,11 +37,10 @@ const InputWrapper = styled.div`
   max-width: 768px;
   display: flex;
   align-items: center;
-  border-radius: 9999px;
+  border-radius: 30px;
   border: 1px solid #d1d5db;
   overflow: hidden;
   padding: 8px;
-  background-color: white;
 
   &:focus-within {
     border-color: #b7d37a;
@@ -91,22 +87,25 @@ const ErrorMessage = styled.div`
 `;
 
 export const InputArea: React.FC = () => {
-  const [input, setInput] = useState("");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
   const [error, setError] = useState("");
-  const { currentChatId, chats, updateChat, addChat, isLoading, setLoading } =
+  const [inputLoading, setInputLoding] = useState(false);
+
+  const { currentChatId, chats, updateChat, addChat, updateMessage } =
     useChatStore();
+  const { userPlanInfo, updateUserPlanInfoField } = useUserPlanInfoStore();
 
   const handleSubmit = async () => {
-    if (!input.trim() || isLoading) return;
-
-    console.log("=== 메시지 전송 시작 ===");
-    console.log("입력 메시지:", input.trim());
+    if (!userPlanInfo.userInput.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: input.trim(),
+      message: userPlanInfo.userInput.trim(),
+      content: [],
       role: "user",
       timestamp: new Date(),
+      isError: false,
     };
 
     let chatId = currentChatId;
@@ -116,12 +115,14 @@ export const InputArea: React.FC = () => {
     if (!chatId) {
       const newChat = {
         id: Date.now().toString(),
-        title: input.trim().slice(0, 30) + (input.length > 30 ? "..." : ""),
+        title:
+          userPlanInfo.userInput.trim().slice(0, 30) +
+          (userPlanInfo.userInput.length > 30 ? "..." : ""),
         messages: [userMessage],
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      console.log("새 채팅 생성:", newChat.id);
+
       addChat(newChat);
       chatId = newChat.id;
       currentMessages = [userMessage];
@@ -136,124 +137,97 @@ export const InputArea: React.FC = () => {
       }
     }
 
-    setInput("");
+    updateUserPlanInfoField("userInput", "");
     setError("");
-    setLoading(true);
+
+    const loadingMessageId = (Date.now() + 1).toString();
+    setInputLoding(true);
 
     try {
-      console.log("=== API 요청 시작 ===");
-      console.log("요청 URL: http://localhost:8080/api/chat/message");
-      console.log("요청 데이터:", { message: userMessage.content });
-
-      const response = await fetch("http://localhost:8080/api/chat/message", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: userMessage.content }),
-      });
-
-      console.log("=== 응답 받음 ===");
-      console.log("응답 상태:", response.status);
-      console.log("응답 OK:", response.ok);
-      console.log("응답 헤더:", Object.fromEntries(response.headers.entries()));
-
-      if (!response.ok) {
-        throw new Error(
-          `HTTP error! status: ${response.status} - ${response.statusText}`
-        );
-      }
-
-      const responseText = await response.text();
-      console.log("=== 응답 텍스트 ===");
-      console.log("원본 텍스트:", responseText);
-
-      let data;
-      try {
-        data = JSON.parse(responseText);
-        console.log("=== 파싱된 JSON ===");
-        console.log("파싱된 데이터:", data);
-      } catch (parseError) {
-        console.error("JSON 파싱 실패:", parseError);
-        throw new Error("서버 응답을 파싱할 수 없습니다.");
-      }
-
-      // AI 응답 메시지 생성
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: data.message || "응답을 받지 못했습니다.",
+      const loadingMessage: Message = {
+        id: loadingMessageId,
+        message: "",
+        content: [],
         role: "assistant",
         timestamp: new Date(),
+        isLoading: true,
+        isError: false,
       };
 
-      console.log("=== AI 메시지 생성 ===");
-      console.log("AI 응답:", aiMessage.content);
-
-      // 메시지 업데이트
-      const finalMessages = [...currentMessages, aiMessage];
+      const finalMessages = [...currentMessages, loadingMessage];
       updateChat(chatId!, {
         messages: finalMessages,
         updatedAt: new Date(),
       });
 
-      console.log("=== 메시지 업데이트 완료 ===");
+      const { text, travelSchedule } = await getAIResponse({
+        userInput: userPlanInfo.userInput,
+        date: `${userPlanInfo.startDate} ~ ${userPlanInfo.endDate}`,
+        region: userPlanInfo.region,
+        travelType: userPlanInfo.travelType,
+        transportation: userPlanInfo.transportation,
+      });
+
+      updateMessage(chatId!, loadingMessageId, {
+        message: text,
+        content: travelSchedule,
+        isLoading: false,
+        isError: false,
+      });
+
+      setInputLoding(false);
     } catch (error) {
-      console.error("=== API 호출 실패 ===");
-      console.error("에러 객체:", error);
-      console.error(
-        "에러 메시지:",
-        error instanceof Error ? error.message : String(error)
-      );
-
-      setError(
-        `API 호출 실패: ${
-          error instanceof Error ? error.message : String(error)
-        }`
-      );
-
-      // 에러 메시지 표시
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: `죄송합니다. 오류가 발생했습니다: ${
-          error instanceof Error ? error.message : String(error)
-        }`,
-        role: "assistant",
-        timestamp: new Date(),
-      };
-
-      const finalMessages = [...currentMessages, errorMessage];
-      updateChat(chatId!, {
-        messages: finalMessages,
-        updatedAt: new Date(),
+      setInputLoding(false);
+      updateMessage(chatId!, loadingMessageId, {
+        message: "AI 응답 중 오류가 발생했습니다. 다시 시도해주세요",
+        content: [],
+        isLoading: false,
+        isError: true,
       });
-    } finally {
-      setLoading(false);
-      console.log("=== 처리 완료 ===");
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    updateUserPlanInfoField("userInput", e.target.value);
+
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "auto";
+      textAreaRef.current.style.height =
+        textAreaRef.current.scrollHeight + "px";
+    }
+  };
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "auto";
+      textAreaRef.current.style.height = "auto";
+    }
+  }, []);
+
   return (
     <InputContainer>
       <InputWrapper>
+        {}
         <TextArea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
+          ref={textAreaRef}
+          value={userPlanInfo.userInput}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           placeholder="무엇이든 물어보세요"
-          disabled={isLoading}
+          rows={1}
         />
 
         <ActionButton
           $variant="primary"
           onClick={handleSubmit}
-          disabled={!input.trim() || isLoading}
+          disabled={!userPlanInfo.userInput.trim() || inputLoading}
         >
           <SendIcon size={18} />
         </ActionButton>
