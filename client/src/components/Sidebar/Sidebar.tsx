@@ -1,7 +1,6 @@
-import type React from "react"
-import styled from "styled-components"
-import { SidebarMenu } from "./SidebarMenu"
-import { ChatHistory } from "./ChatHistory"
+import type React from "react";
+import styled from "styled-components";
+import { SidebarMenu } from "./SidebarMenu";
 
 const SidebarContainer = styled.aside`
   position: fixed;
@@ -14,13 +13,12 @@ const SidebarContainer = styled.aside`
   display: flex;
   flex-direction: column;
   z-index: 1000;
-`
+`;
 
 export const Sidebar: React.FC = () => {
   return (
     <SidebarContainer>
       <SidebarMenu />
-      <ChatHistory />
     </SidebarContainer>
-  )
-}
+  );
+};
