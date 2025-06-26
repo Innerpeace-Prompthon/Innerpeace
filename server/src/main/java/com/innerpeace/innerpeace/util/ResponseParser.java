@@ -18,6 +18,7 @@ public class ResponseParser {
     private static final String PLACE = "장소:";
     private static final String ACTIVITY = "활동:";
     private static final String DESCRIPTION = "설명:";
+    private static final String ADDRESS = "주소:";
     private static final String IMAGE = "이미지:";
     private static final String LATITUDE = "위도:";
     private static final String LONGITUDE = "경도:";
@@ -102,6 +103,8 @@ public class ResponseParser {
             plan.setActivity(line.replace(ACTIVITY, "").trim());
         } else if (line.startsWith(DESCRIPTION)) {
             plan.setDescription(line.replace(DESCRIPTION, "").trim());
+        } else if (line.startsWith(ADDRESS)) {
+            plan.setAddress(line.replace(ADDRESS, "").trim());
         } else if (line.startsWith(IMAGE)) {
             plan.setImage(line.replace(IMAGE, "").trim());
         } else if (line.startsWith(LATITUDE)) {
