@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -35,11 +36,16 @@ public class CallLaasApiService {
         Map<String, Object> request = Map.of(
                 "hash", "7d58dfb6910ce0f5a240769143b43a62c65e1b716820632dff4761e19b0b1d49",
                 "params", Map.of(
-                        "유저입력", requestDto.getUserInput(),
                         "여행날짜", requestDto.getDate(),
                         "선호지역", requestDto.getRegion(),
                         "선호여행타입", requestDto.getTravelType(),
                         "이동수단", requestDto.getTransportation()
+                ),
+                "messages", List.of(
+                        Map.of(
+                                "role", "user",
+                                "content", requestDto.getUserInput()
+                        )
                 )
         );
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
