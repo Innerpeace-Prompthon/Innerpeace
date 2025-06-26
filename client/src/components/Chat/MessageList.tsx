@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useEffect, useRef } from "react"
-import styled from "styled-components"
-import type { Message } from "../../types/chat"
-import { MessageItem } from "./MessageItem"
+import type React from "react";
+import { useEffect, useRef } from "react";
+import styled from "styled-components";
+import type { Message } from "../../types/chat";
+import { MessageItem } from "./MessageItem";
 
 const ListContainer = styled.div`
   flex: 1;
@@ -14,18 +14,18 @@ const ListContainer = styled.div`
   align-items: center;
   width: 100%;
   min-height: 0;
-`
+`;
 
 interface MessageListProps {
-  messages: Message[]
+  messages: Message[];
 }
 
 export const MessageList: React.FC<MessageListProps> = ({ messages }) => {
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <ListContainer>
@@ -34,5 +34,5 @@ export const MessageList: React.FC<MessageListProps> = ({ messages }) => {
       ))}
       <div ref={bottomRef} />
     </ListContainer>
-  )
-}
+  );
+};

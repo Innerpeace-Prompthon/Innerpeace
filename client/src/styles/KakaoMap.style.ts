@@ -11,33 +11,22 @@ export const KakaoContainer = styled.div`
   }
 `;
 
-export const MarkerTooltip = styled.div`
-  min-width: 300px;
-  max-width: 500px;
+export const MarkerTooltip = styled.div<{ $color: string }>`
+  width: 200px;
   position: absolute;
   bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
-  background: white;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(6px);
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   font-size: 14px;
   z-index: 1000;
   white-space: normal;
   text-align: left;
-
-  /* 말풍선 꼬리 */
-  &::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: white;
-  }
 
   /* 호버 애니메이션 */
   animation: fadeIn 0.2s ease-in-out;
@@ -53,24 +42,31 @@ export const MarkerTooltip = styled.div`
     }
   }
 
-  div {
-    margin: 2px 0;
+  .place {
+    font-weight: bold;
+    color: black;
+    font-size: 14px;
+    margin-top: 4px;
+  }
 
-    &:first-child {
-      font-weight: bold;
-      color: #333;
-    }
+  .activity {
+    font-weight: 500;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    color: black;
+    font-size: 12px;
+  }
 
-    &:last-child {
-      color: #666;
-      font-size: 12px;
-    }
+  .description {
+    color: rgb(13, 13, 13);
+    font-size: 11px;
   }
 
   img {
-    min-width: 100%;
+    width: 100%;
     min-height: 100px;
-    border: 1px solid black;
+    max-height: 300px;
+    border-radius: 6px;
   }
 `;
 

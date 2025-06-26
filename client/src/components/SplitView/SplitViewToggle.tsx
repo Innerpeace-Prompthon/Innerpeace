@@ -1,9 +1,7 @@
-"use client"
-
-import type React from "react"
-import styled from "styled-components"
-import { useChatStore } from "../../store/chatStore"
-import { CollapseIcon, SplitViewIcon } from "../Icons"
+import type React from "react";
+import styled from "styled-components";
+import { SplitViewIcon } from "../Icons";
+import { useSplitViewStore } from "../../store/splitViewStore";
 
 const ToggleButton = styled.button`
   position: fixed;
@@ -30,14 +28,21 @@ const ToggleButton = styled.button`
   &:active {
     transform: scale(0.95);
   }
-`
+`;
 
 export const SplitViewToggle: React.FC = () => {
-  const { showSplitView, toggleSplitView } = useChatStore()
+  const { showSplitView, toggleSplitView } = useSplitViewStore();
 
   return (
-    <ToggleButton onClick={toggleSplitView} title={showSplitView ? "스플릿 뷰 닫기" : "스플릿 뷰 열기"}>
-      {showSplitView ? <CollapseIcon size={18} /> : <SplitViewIcon size={18} />}
-    </ToggleButton>
-  )
-}
+    <>
+      {!showSplitView && (
+        <ToggleButton
+          onClick={toggleSplitView}
+          title={showSplitView ? "스플릿 뷰 닫기" : "스플릿 뷰 열기"}
+        >
+          <SplitViewIcon size={18} />
+        </ToggleButton>
+      )}
+    </>
+  );
+};

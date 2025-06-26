@@ -1,31 +1,38 @@
+import type { PlanDataType } from "./api";
+
 export interface Message {
-  id: string
-  content: string
-  role: "user" | "assistant"
-  timestamp: Date
+  id: string;
+  message: string;
+  content: PlanDataType[];
+  role: "user" | "assistant";
+  timestamp: Date;
+  isLoading?: boolean;
+  isError: boolean;
 }
 
 export interface Chat {
-  id: string
-  title: string
-  messages: Message[]
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  title: string;
+  messages: Message[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ChatStore {
-  chats: Chat[]
-  currentChatId: string | null
-  sidebarOpen: boolean
-  isLoading: boolean
-  showSplitView: boolean
+  chats: Chat[];
+  currentChatId: string | null;
+  sidebarOpen: boolean;
 
-  addChat: (chat: Chat) => void
-  updateChat: (chatId: string, updates: Partial<Chat>) => void
-  deleteChat: (chatId: string) => void
-  setCurrentChat: (chatId: string | null) => void
-  toggleSidebar: () => void
-  setSidebarOpen: (open: boolean) => void
-  setLoading: (loading: boolean) => void
-  toggleSplitView: () => void
+  resetChat: () => void;
+  addChat: (chat: Chat) => void;
+  updateChat: (chatId: string, updates: Partial<Chat>) => void;
+  updateMessage: (
+    chatId: string,
+    messageId: string,
+    updates: Partial<Message>
+  ) => void;
+  deleteChat: (chatId: string) => void;
+  setCurrentChat: (chatId: string | null) => void;
+  toggleSidebar: () => void;
+  setSidebarOpen: (open: boolean) => void;
 }

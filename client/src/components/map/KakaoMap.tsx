@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Map } from "react-kakao-maps-sdk";
 import * as S from "../../styles/KakaoMap.style";
 import useKakaoLoader from "../../hooks/useKakaoLoader";
-import type { TravelSpot } from "../../types/travelSchedule";
 import PolylineAndMarkers from "./PolylineAndMarkers";
 import { useTravelScheduleStore } from "../../store/travelScheduleStore";
+import type { PlaceDataType } from "../../types/api";
 
-type PlaceList = Record<string, TravelSpot[]>;
+type PlaceList = Record<string, PlaceDataType[]>;
 
 interface KakaoMapProps {
   placeList: PlaceList;
@@ -36,7 +36,7 @@ const KakaoMap: React.FC<KakaoMapProps> = ({ placeList, day }) => {
     const bounds = new window.kakao.maps.LatLngBounds();
     let shouldSetBounds = false;
 
-    const addToBounds = (places: TravelSpot[]) => {
+    const addToBounds = (places: PlaceDataType[]) => {
       places.forEach(({ longitude, latitude }) => {
         if (!isNaN(longitude ?? 0) && !isNaN(latitude ?? 0)) {
           bounds.extend(

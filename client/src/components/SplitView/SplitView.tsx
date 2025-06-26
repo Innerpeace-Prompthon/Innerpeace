@@ -1,5 +1,7 @@
 import type React from "react";
 import styled from "styled-components";
+import { CollapseIcon } from "../Icons";
+import { useSplitViewStore } from "../../store/splitViewStore";
 
 const SplitContainer = styled.div`
   position: fixed;
@@ -26,12 +28,19 @@ const SplitContainer = styled.div`
 `;
 
 const SplitHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 16px 20px;
   border-bottom: 1px solid #e5e7eb;
   background-color: white;
   font-weight: 600;
   font-size: 14px;
   color: #374151;
+`;
+
+const SplitCloseButton = styled.button`
+  cursor: pointer;
 `;
 
 const SplitContent = styled.div`
@@ -54,9 +63,16 @@ export const SplitView: React.FC<SplitViewPropsType> = ({
   children,
   title,
 }) => {
+  const { setSplitViewOpen } = useSplitViewStore();
+
   return (
     <SplitContainer>
-      <SplitHeader>{title}</SplitHeader>
+      <SplitHeader>
+        {title}
+        <SplitCloseButton onClick={() => setSplitViewOpen(false)}>
+          <CollapseIcon size={18} />
+        </SplitCloseButton>
+      </SplitHeader>
       <SplitContent>{children}</SplitContent>
     </SplitContainer>
   );

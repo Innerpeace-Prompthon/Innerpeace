@@ -1,24 +1,10 @@
-export interface TravelSpot {
-  order: number;
-  place: string;
-  description: string;
-  activity: string;
-  image: string | null;
-  latitude: number | null;
-  longitude: number | null;
-}
-
-export interface TravelDay {
-  day: string;
-  date: string;
-  plan: TravelSpot[];
-}
+import type { PlanDataType } from "./api";
 
 export interface TravelScheduleStoreType {
-  travelSchedule: TravelDay[];
+  travelSchedule: PlanDataType[];
   colors: string[];
 
-  addTravelSchedule: (travelSchedule: TravelDay[]) => void;
+  addTravelSchedule: (travelSchedule: PlanDataType[]) => void;
   deleteTravelSchedule: () => void;
   changeColor: (color: string, index: number) => void;
 }

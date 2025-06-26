@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import type { TravelSpot } from "../../types/travelSchedule";
 import { Polyline, CustomOverlayMap } from "react-kakao-maps-sdk";
 import * as S from "../../styles/KakaoMap.style";
+import type { PlaceDataType } from "../../types/api";
 
 interface PolylineAndMarkersPropsType {
-  places: TravelSpot[];
+  places: PlaceDataType[];
   color: string;
   keyPrefix: string;
 }
@@ -14,7 +14,7 @@ const PolylineAndMarkers: React.FC<PolylineAndMarkersPropsType> = ({
   color,
   keyPrefix,
 }) => {
-  const [hoveredPlace, setHoveredPlace] = useState<TravelSpot | null>(null);
+  const [hoveredPlace, setHoveredPlace] = useState<PlaceDataType | null>(null);
 
   const validPoints = places
     .filter(
@@ -36,7 +36,7 @@ const PolylineAndMarkers: React.FC<PolylineAndMarkersPropsType> = ({
         strokeStyle="dashed"
       />
 
-      {places.map((item) => {
+      {places.map((item, index) => {
         const {
           order,
           longitude,
@@ -50,7 +50,7 @@ const PolylineAndMarkers: React.FC<PolylineAndMarkersPropsType> = ({
         if (isNaN(longitude ?? 0) || isNaN(latitude ?? 0)) return null;
 
         const position = { lng: longitude!, lat: latitude! };
-        const key = `${keyPrefix}-${order}-${place}-${longitude}-${latitude}`;
+        const key = `${keyPrefix}-${index}-${place}-${longitude}-${latitude}`;
 
         return (
           <React.Fragment key={key}>
@@ -60,19 +60,19 @@ const PolylineAndMarkers: React.FC<PolylineAndMarkersPropsType> = ({
                 onMouseEnter={() => setHoveredPlace(item)}
                 onMouseLeave={() => setHoveredPlace(null)}
               >
-                {order}
+                {order && order !== 0 ? order : index + 1}
               </S.CustomMarker>
             </CustomOverlayMap>
 
-            {hoveredPlace?.order === order && hoveredPlace.place === place && (
+            {hoveredPlace?.place === place && hoveredPlace?.order === order && (
               <CustomOverlayMap position={position} yAnchor={1}>
-                <S.MarkerTooltip>
+                <S.MarkerTooltip $color={color}>
                   <img src={image ?? ""} alt={`${place} 이미지`} />
-                  <div>
-                    {order}. {place}
+                  <div className="place">
+                    {order && order !== 0 ? order : index + 1}. {place}
                   </div>
-                  <div>{activity}</div>
-                  <div>{description}</div>
+                  <div className="activity">{activity}</div>
+                  <div className="description">{description}</div>
                 </S.MarkerTooltip>
               </CustomOverlayMap>
             )}

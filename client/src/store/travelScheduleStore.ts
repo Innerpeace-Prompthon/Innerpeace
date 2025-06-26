@@ -1,15 +1,13 @@
 import { create } from "zustand";
-import type {
-  TravelDay,
-  TravelScheduleStoreType,
-} from "../types/travelSchedule";
+import type { TravelScheduleStoreType } from "../types/travelSchedule";
+import type { PlanDataType } from "../types/api";
 
 export const useTravelScheduleStore = create<TravelScheduleStoreType>()(
   (set) => ({
     travelSchedule: [],
     colors: ["#156bf0", "#f01562", "#15f062", "#f0d215"],
 
-    addTravelSchedule: (travelSchedule: TravelDay[]) => {
+    addTravelSchedule: (travelSchedule: PlanDataType[]) => {
       set(() => ({
         travelSchedule,
       }));

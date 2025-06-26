@@ -13,11 +13,13 @@ import {
 } from "./styles/App.styles";
 import DaysMap from "./components/map/DaysMap";
 import { SplitView } from "./components/SplitView/SplitView";
+import { useSplitViewStore } from "./store/splitViewStore";
 
 const queryClient = new QueryClient();
 
 function ChatApp() {
-  const { currentChatId, chats, showSplitView } = useChatStore();
+  const { currentChatId, chats } = useChatStore();
+  const { showSplitView } = useSplitViewStore();
 
   const currentChat = chats.find((chat) => chat.id === currentChatId);
   const hasMessages = currentChat && currentChat.messages.length > 0;
@@ -38,7 +40,7 @@ function ChatApp() {
         </ChatContainer>
 
         {showSplitView && (
-          <SplitView title="추가 정보">
+          <SplitView title="여행 일정">
             <DaysMap />
           </SplitView>
         )}
