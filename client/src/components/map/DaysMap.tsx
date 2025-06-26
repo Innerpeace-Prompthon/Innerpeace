@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import DaysToolBar from "./DaysToolBar";
 import KakaoMap from "./KakaoMap";
 import { useTravelScheduleStore } from "../../store/travelScheduleStore";
-import type { TravelSpot } from "../../types/travelSchedule";
 import styled from "styled-components";
+import type { PlaceDataType } from "../../types/api";
 
 const MapContainer = styled.div`
   width: 100%;
@@ -15,12 +15,12 @@ const DaysMap: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const { travelSchedule } = useTravelScheduleStore();
 
-  const placeList: Record<string, TravelSpot[]> = travelSchedule.reduce(
+  const placeList: Record<string, PlaceDataType[]> = travelSchedule?.reduce(
     (acc, { date, plan }) => {
       acc[date] = plan;
       return acc;
     },
-    {} as Record<string, TravelSpot[]>
+    {} as Record<string, PlaceDataType[]>
   );
 
   const onClickSelectDay = (day: string | null): void => {
