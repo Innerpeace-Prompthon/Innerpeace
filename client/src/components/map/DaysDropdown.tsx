@@ -78,39 +78,28 @@ const DaysDropdown: React.FC<DaysDropdownPropsType> = ({
                   }}
                 >
                   <span>{label}</span>
-                  {value && color && (
-                    <div
-                      style={{
-                        width: 16,
-                        height: 16,
-                        backgroundColor: color,
-                        borderRadius: "50%",
-                        border: "1px solid #ccc",
-                      }}
-                    />
+
+                  {isSelected && value && (
+                    <S.MarkerColorBox>
+                      <input
+                        type="color"
+                        value={selectedColor}
+                        onChange={(e) => setSelectedColor(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (colorIndex >= 0) {
+                            changeColor(selectedColor, colorIndex);
+                          }
+                        }}
+                      >
+                        변경
+                      </button>
+                    </S.MarkerColorBox>
                   )}
                 </div>
-
-                {isSelected && value && (
-                  <S.MarkerColorBox>
-                    <input
-                      type="color"
-                      value={selectedColor}
-                      onChange={(e) => setSelectedColor(e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (colorIndex >= 0) {
-                          changeColor(selectedColor, colorIndex);
-                        }
-                      }}
-                    >
-                      변경
-                    </button>
-                  </S.MarkerColorBox>
-                )}
               </S.SelectOptionItem>
             );
           })}
