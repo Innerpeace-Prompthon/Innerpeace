@@ -1,9 +1,12 @@
 import type React from "react";
 import styled from "styled-components";
 import type { Message } from "../../types/chat";
-import { useChatStore } from "../../store/chatStore";
+import LoadingBubble from "./LoadingBubble";
+import { useSplitViewStore } from "../../store/splitViewStore";
 import { useTravelScheduleStore } from "../../store/travelScheduleStore";
-import { fetchTravelPlan } from "../../api/travel";
+import MessagePlanContent from "./MessagePlanContent";
+import type { PlanDataType } from "../../types/api";
+import CreatePlanButton from "./CreatePlanButton";
 
 const MessageContainer = styled.div<{ $isUser: boolean }>`
   display: flex;
@@ -12,20 +15,27 @@ const MessageContainer = styled.div<{ $isUser: boolean }>`
   width: 100%;
 `;
 
-const MessageBubble = styled.div<{ $isUser: boolean; $hasSplitView?: boolean }>`
-  max-width: ${(props) => (props.$hasSplitView ? "85%" : "70%")};
-  padding: 8px 20px;
-  border-radius: 30px;
-  background-color: ${(props) => (props.$isUser ? "#a3bd6c" : "#f2f2f2")};
+const MessageBubble = styled.div<{
+  $isUser: boolean;
+  $hasSplitView?: boolean;
+  $isError: boolean;
+}>`
+  max-width: ${(props) => (props.$hasSplitView ? "100%" : "70%")};
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: ${(props) => (props.$isUser ? "#a3bd6c" : "#f5f5f5")};
   color: ${(props) => (props.$isUser ? "white" : "#111827")};
   font-size: 14px;
   line-height: 1.7;
   word-wrap: break-word;
 
-  /* 줄바꿈 강제 적용 */
   white-space: pre-wrap !important;
   word-break: break-word;
   overflow-wrap: break-word;
+
+  .message {
+    color: ${({ $isError }) => $isError && "red"};
+  }
 
   /* AI 응답의 경우 추가 스타일링 */
   ${(props) =>
@@ -54,10 +64,11 @@ const MessageContent = styled.div<{
 }>`
   display: flex;
   flex-direction: column;
+  gap: 5px;
   align-items: flex-start;
   flex-direction: ${(props) => (props.$isUser ? "row-reverse" : "column")};
   width: 100%;
-  max-width: ${(props) => (props.$hasSplitView ? "500px" : "768px")};
+  max-width: ${(props) => (props.$hasSplitView ? "100%" : "768px")};
   padding: 0 ${(props) => (props.$hasSplitView ? "15px" : "20px")};
 `;
 
@@ -67,49 +78,68 @@ interface MessageItemProps {
 
 export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const isUser = message.role === "user";
-  const { showSplitView, toggleSplitView } = useChatStore();
+  const { showSplitView, setSplitViewOpen } = useSplitViewStore();
+  const { addTravelSchedule } = useTravelScheduleStore();
 
-  const { addTravelSchedule, deleteTravelSchedule } = useTravelScheduleStore();
-
-  const onClickCreateTravelSchedule = async () => {
-    try {
-      const data = await fetchTravelPlan({
-        userInput: "",
-        date: "",
-        region: "",
-        travelType: "",
-        transportation: "",
-      });
-      deleteTravelSchedule();
-      addTravelSchedule(data);
-      toggleSplitView();
-    } catch (e) {
-      console.log(e);
-    }
+  const onClickCreateTravelSchedule = (content: PlanDataType[]) => {
+    addTravelSchedule(content);
+    setSplitViewOpen(true);
   };
 
   return (
     <MessageContainer $isUser={isUser}>
       <MessageContent $isUser={isUser} $hasSplitView={showSplitView}>
         {!isUser && <Avatar $isUser={isUser}>이너피스</Avatar>}
-        <MessageBubble $isUser={isUser} $hasSplitView={showSplitView}>
-          <p>{message.content}</p>
-        </MessageBubble>
 
-        {!isUser && (
-          <button
-            style={{
-              margin: "10px",
-              color: "white",
-              padding: "6px 10px",
-              borderRadius: "9999px",
-              fontSize: "12px",
-              backgroundColor: "#a3bd6c",
-            }}
-            onClick={onClickCreateTravelSchedule}
-          >
-            일정생성
-          </button>
+        {message.isLoading ? (
+          <>
+            <LoadingBubble />
+          </>
+        ) : (
+          <>
+            {isUser ? (
+              <MessageBubble
+                $isUser={isUser}
+                $hasSplitView={showSplitView}
+                $isError={message.isError}
+              >
+                <p>{message.message}</p>
+              </MessageBubble>
+            ) : (
+              <>
+                {message.content.length > 0 && (
+                  <MessageBubble
+                    $isUser={isUser}
+                    $hasSplitView={showSplitView}
+                    $isError={message.isError}
+                  >
+                    <MessagePlanContent content={message.content} />
+                  </MessageBubble>
+                )}
+
+                <MessageBubble
+                  $isUser={isUser}
+                  $hasSplitView={showSplitView}
+                  $isError={message.isError}
+                >
+                  <p className="message">{message.message}</p>
+
+                  {!isUser &&
+                    !message.isError &&
+                    !message.isLoading &&
+                    message.content.length > 0 && (
+                      <div style={{ padding: "6px 0px 3px" }}>
+                        <CreatePlanButton
+                          onClick={() =>
+                            onClickCreateTravelSchedule(message.content)
+                          }
+                        />
+                      </div>
+                    )}
+                </MessageBubble>
+              </>
+            )}
+          </>
         )}
       </MessageContent>
     </MessageContainer>
