@@ -1,6 +1,6 @@
 export interface UserPlanInfoType {
   region: string;
-  travelType: string;
+  travelType: string[];
   startDate: string;
   endDate: string;
   transportation: string;

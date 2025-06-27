@@ -4,6 +4,7 @@ import { useChatStore } from "../../store/chatStore";
 import { HomeIcon } from "../Icons";
 import UserInfoForm from "../Chat/UserInfoForm";
 import { useUserPlanInfoStore } from "../../store/userPlanInfoStore";
+import { useTravelScheduleStore } from "../../store/travelScheduleStore";
 
 const MenuContainer = styled.div`
   padding: 16px 12px;
@@ -40,22 +41,13 @@ const MenuItem = styled.button`
 export const SidebarMenu: React.FC = () => {
   const { setCurrentChat, chats, resetChat } = useChatStore();
   const { resetUserPlanInfo } = useUserPlanInfoStore();
-
-  // const handleNewChat = () => {
-  //   const newChat = {
-  //     id: Date.now().toString(),
-  //     title: "새로운 채팅",
-  //     messages: [],
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   };
-  //   addChat(newChat);
-  // };
+  const { deleteTravelSchedule } = useTravelScheduleStore();
 
   const handleHome = () => {
     setCurrentChat(null);
     resetChat();
     resetUserPlanInfo();
+    deleteTravelSchedule();
   };
 
   return (

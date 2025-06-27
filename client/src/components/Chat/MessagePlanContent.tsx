@@ -25,8 +25,12 @@ const MessagePlanContent: React.FC<MessagePlanContentPropsType> = ({
               <S.Header>
                 {item.order}. {item.place}
               </S.Header>
-              <S.Activity>{item.activity}</S.Activity>
+
+              <S.Address>{item.address}</S.Address>
+
               <S.Description>{item.description}</S.Description>
+
+              <S.Activity>{item.activity}</S.Activity>
             </S.PlanItem>
           ))}
         </S.PlanDayWrapper>

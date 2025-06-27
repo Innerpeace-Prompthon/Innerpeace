@@ -16,7 +16,7 @@ export const WelcomeScreen: React.FC = () => {
     <S.WelcomeContainer>
       <S.WelcomeTitle>
         <p>쉼이 필요한 당신을 위한, 감성 힐링 여행</p>
-        <span className="title">Inner Peace</span>
+        <span className="title">Innerpeace</span>
       </S.WelcomeTitle>
 
       <UserInfoForm />

@@ -17,4 +17,5 @@ export interface PlaceDataType {
   longitude: number;
   order: number;
   place: string;
+  address: string;
 }

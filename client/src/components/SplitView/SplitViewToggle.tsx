@@ -2,6 +2,7 @@ import type React from "react";
 import styled from "styled-components";
 import { SplitViewIcon } from "../Icons";
 import { useSplitViewStore } from "../../store/splitViewStore";
+import { useTravelScheduleStore } from "../../store/travelScheduleStore";
 
 const ToggleButton = styled.button`
   position: fixed;
@@ -32,10 +33,11 @@ const ToggleButton = styled.button`
 
 export const SplitViewToggle: React.FC = () => {
   const { showSplitView, toggleSplitView } = useSplitViewStore();
+  const { travelSchedule } = useTravelScheduleStore();
 
   return (
     <>
-      {!showSplitView && (
+      {!showSplitView && travelSchedule.length > 0 && (
         <ToggleButton
           onClick={toggleSplitView}
           title={showSplitView ? "스플릿 뷰 닫기" : "스플릿 뷰 열기"}

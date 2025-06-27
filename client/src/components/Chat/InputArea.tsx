@@ -32,7 +32,7 @@ const TextArea = styled.textarea`
   }
 `;
 
-const InputWrapper = styled.div`
+const InputWrapper = styled.form`
   width: 100%;
   max-width: 768px;
   display: flex;
@@ -95,6 +95,13 @@ export const InputArea: React.FC = () => {
   const { currentChatId, chats, updateChat, addChat, updateMessage } =
     useChatStore();
   const { userPlanInfo, updateUserPlanInfoField } = useUserPlanInfoStore();
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // form의 기본 제출 동작 막기
+    if (!inputLoading && userPlanInfo.userInput.trim()) {
+      handleSubmit();
+    }
+  };
 
   const handleSubmit = async () => {
     if (!userPlanInfo.userInput.trim()) return;
@@ -164,7 +171,7 @@ export const InputArea: React.FC = () => {
         userInput: userPlanInfo.userInput,
         date: `${userPlanInfo.startDate} ~ ${userPlanInfo.endDate}`,
         region: userPlanInfo.region,
-        travelType: userPlanInfo.travelType,
+        travelType: userPlanInfo.travelType.join(","),
         transportation: userPlanInfo.transportation,
       });
 
@@ -190,7 +197,9 @@ export const InputArea: React.FC = () => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit();
+      if (!inputLoading && userPlanInfo.userInput.trim()) {
+        handleSubmit();
+      }
     }
   };
 
@@ -213,20 +222,20 @@ export const InputArea: React.FC = () => {
 
   return (
     <InputContainer>
-      <InputWrapper>
-        {}
+      <InputWrapper onSubmit={handleFormSubmit}>
         <TextArea
           ref={textAreaRef}
           value={userPlanInfo.userInput}
           onChange={handleInputChange}
+          placeholder="여행 관련 내용을 자유롭게 작성해 주세요"
           onKeyDown={handleKeyDown}
-          placeholder="무엇이든 물어보세요"
           rows={1}
+          disabled={inputLoading}
         />
 
         <ActionButton
           $variant="primary"
-          onClick={handleSubmit}
+          type="submit"
           disabled={!userPlanInfo.userInput.trim() || inputLoading}
         >
           <SendIcon size={18} />

@@ -27,7 +27,7 @@ const LoadingBubble: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowMessageLoading(true), 5000);
+    const timer = setTimeout(() => setShowMessageLoading(true), 7000);
     return () => clearTimeout(timer);
   }, []);
 
