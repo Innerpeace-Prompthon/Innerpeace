@@ -49,7 +49,7 @@ export const Image = styled.img`
 export const Header = styled.h3`
   font-size: 16px;
   font-weight: 600;
-  margin: 4px 0;
+  margin: 4px 0 2px;
 `;
 
 export const Activity = styled.div`
@@ -62,5 +62,12 @@ export const Description = styled.div`
   font-size: 13px;
   color: #666;
   margin-top: 4px;
+  line-height: 1.4;
+`;
+
+export const Address = styled.div`
+  font-size: 13px;
+  color: #444;
+  margin-top: 2px;
   line-height: 1.4;
 `;

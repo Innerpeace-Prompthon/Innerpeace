@@ -2,6 +2,15 @@ import { useUserPlanInfoStore } from "../../store/userPlanInfoStore";
 import { formatDate } from "../../utils";
 import * as S from "../../styles/UserInfoForm.style";
 import type React from "react";
+import MultiSelect from "./MultiSelect";
+
+const travelTypeOptions = [
+  "관광",
+  "문화시설",
+  "축제 / 공연 / 행사",
+  "쇼핑",
+  "음식점",
+];
 
 interface UserInfoFormPropsType {
   isSmall?: boolean;
@@ -65,21 +74,14 @@ const UserInfoForm: React.FC<UserInfoFormPropsType> = ({ isSmall = false }) => {
       </S.InputBox>
 
       <S.InputBox>
-        <S.Label>여행 목적</S.Label>
-        <S.Select
-          name="travelType"
-          value={userPlanInfo.travelType}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            const { value } = e.target;
-            updateUserPlanInfoField("travelType", value);
-          }}
-        >
-          <option value="관광">관광</option>
-          <option value="문화시설">문화시설</option>
-          <option value="축제 / 공연 / 행사">축제 / 공연 / 행사</option>
-          <option value="쇼핑">쇼핑</option>
-          <option value="음식점">음식점</option>
-        </S.Select>
+        <MultiSelect
+          label="여행 유형 선택"
+          options={travelTypeOptions}
+          selected={userPlanInfo.travelType}
+          onChange={(newSelected) =>
+            updateUserPlanInfoField("travelType", newSelected)
+          }
+        />
       </S.InputBox>
 
       <S.InputBox>
