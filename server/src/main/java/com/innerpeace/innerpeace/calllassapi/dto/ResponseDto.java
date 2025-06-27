@@ -34,6 +34,7 @@ public class ResponseDto {
         private String place;
         private String description;
         private String activity;
+        private String address;
         private String image;
         private double latitude;
         private double longitude;
