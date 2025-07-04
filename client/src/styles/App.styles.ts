@@ -2,9 +2,10 @@ import styled from "styled-components";
 
 export const AppContainer = styled.div`
   display: flex;
-  height: 100vh;
+  flex-direction: column;  /* 세로 정렬 */
+  min-height: 100vh;       /* 화면 전체 높이 확보 */
   width: 100vw;
-  overflow: hidden;
+  // overflow: hidden;
 `;
 
 export const SidebarWrapper = styled.div<{ $isHidden?: boolean }>`
@@ -19,12 +20,18 @@ export const SidebarWrapper = styled.div<{ $isHidden?: boolean }>`
 `;
 
 export const ChatContainer = styled.div<{ $hasSplitView?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  flex: ${(props) => (props.$hasSplitView ? "none" : "1")};
+  flex: 1;                /* 남은 공간 다 차지 */
   margin-left: ${(props) => (props.$hasSplitView ? "0" : "260px")};
   width: ${(props) => (props.$hasSplitView ? "50%" : "auto")};
-  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;       /* 스크롤 가능 */
+  // display: flex;
+  // flex-direction: column;
+  // flex: ${(props) => (props.$hasSplitView ? "none" : "1")};
+  // margin-left: ${(props) => (props.$hasSplitView ? "0" : "260px")};
+  // width: ${(props) => (props.$hasSplitView ? "50%" : "auto")};
+  // transition: all 0.3s ease;
 `;
 
 export const ChatContent = styled.div`
