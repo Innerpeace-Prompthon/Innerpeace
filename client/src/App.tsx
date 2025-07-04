@@ -14,7 +14,6 @@ import {
 import DaysMap from "./components/map/DaysMap";
 import { SplitView } from "./components/SplitView/SplitView";
 import { useSplitViewStore } from "./store/splitViewStore";
-import Footer from "./components/Footer/Footer";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +36,7 @@ function ChatApp() {
           <ChatContent>
             <ChatArea />
           </ChatContent>
+
           {hasMessages && <InputArea />}
         </ChatContainer>
 
@@ -47,7 +47,6 @@ function ChatApp() {
         )}
 
         <SplitViewToggle />
-        <Footer />
       </AppContainer>
     </>
   );
