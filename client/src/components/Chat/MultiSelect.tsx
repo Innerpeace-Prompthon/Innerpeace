@@ -30,7 +30,6 @@ const SelectBox = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 5px;
-  padding: 8px 12px;
   background: #fff;
   cursor: pointer;
   user-select: none;
