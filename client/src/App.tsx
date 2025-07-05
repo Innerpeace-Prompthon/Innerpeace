@@ -36,6 +36,7 @@ function ChatApp() {
           <ChatContent>
             <ChatArea />
           </ChatContent>
+
           {hasMessages && <InputArea />}
         </ChatContainer>
 

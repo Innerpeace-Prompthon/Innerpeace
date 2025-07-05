@@ -2,7 +2,6 @@ import styled, { css } from "styled-components";
 
 const smallStyle = css`
   font-size: 10px;
-  padding: 10px;
 `;
 
 const normalStyle = css`
